@@ -15,10 +15,13 @@ class Bot:
         self.fsm = fsm
         self.storage = storage
 
+    def notify(self, size, pay_method):
+        print(f"got order for '{size}' pizza with pay_method '{pay_method}'")
+
     def handle(self, client_id, message):
         state = self.storage.get(client_id)
         if state is None:
-            state = self.fsm()
+            state = self.fsm(notify_method=self.notify)
             self.storage.set(client_id, state)
             return state.get_dialog()
         try:
