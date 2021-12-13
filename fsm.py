@@ -13,7 +13,7 @@ class Consumer(object):
     states = ['Какую вы хотите пиццу? Большую или маленькую?',
               'Как вы будете платить?',
               'Вы хотите большую пиццу, оплата - наличкой?',
-              'Спасибо за заказ, ещё?',
+              'Спасибо за заказ.',
               'На старт']
     def __init__(self, id, name):
         self.id=id
@@ -30,13 +30,13 @@ class Consumer(object):
                                     dest='Вы хотите большую пиццу, оплата - наличкой?')
         self.machine.add_transition(trigger='Да',
                                     source='Вы хотите большую пиццу, оплата - наличкой?',
-                                    dest='Спасибо за заказ, ещё?',
+                                    dest='Спасибо за заказ.',
                                     after='update_journal')
         self.machine.add_transition(trigger='Да',
-                                    source='Спасибо за заказ, ещё?',
+                                    source='Спасибо за заказ.',
                                     dest='Какую вы хотите пиццу? Большую или маленькую?')
         self.machine.add_transition(trigger='Нет',
-                                    source='Спасибо за заказ, ещё?',
+                                    source='Спасибо за заказ.',
                                     dest='На старт')
 
 
