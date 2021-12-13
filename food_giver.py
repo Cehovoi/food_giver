@@ -1,12 +1,11 @@
 import telebot
-from fsm import Consumer
 import shelve
+import transitions
+from fsm import Consumer
 
 
 bot = telebot.TeleBot('5012439687:AAEjQ94WLZU6xccEzxKWYV6rmPxbY17uF0g')
-
-process = {}
-fuse = ' Учтите вы уже заказали %s, не обкушайтесь! '
+fuse = ' Учтите вы только что уже заказали %s, не обкушайтесь! '
 
 @bot.message_handler(commands=['start', 'stop'])
 def start(message):
@@ -35,10 +34,12 @@ def get_text_messages(message):
             db[id_db] = client
         db.close()
         bot.send_message(id, "%s" % answer)
-
-    except(Exception):
+    except(AttributeError, transitions.core.MachineError):
         step = client.machine.get_triggers(client.state)[-1]
-        bot.send_message(id, "Хошь не хошь, а надо написать - %s" % step)
+        if 'to_' in step:
+            bot.send_message(id, client.state)
+        else:
+            bot.send_message(id, "Хошь не хошь, а надо написать - %s" % step)
 
 
 bot.polling(none_stop=True, interval=0)
